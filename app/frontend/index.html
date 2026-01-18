@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            vertical-align: middle;
+            /* center text vertically */
+            text-align: center;
+        }
+
+        table tr {
+            height: 40px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="message"></h1>
+    <button id="refresh-btn">Refresh</button>
+    <script>
+        const messageEl = document.getElementById('message');
+        const refreshBtn = document.getElementById('refresh-btn');
+
+        function updateStatus() {
+            fetch('api/status-refresh')  // replace with your endpoint URL
+            fetch('api/status')  // replace with your endpoint URL
+                .then(response => response.text())  // get as plain text
+                .then(text => {
+                    text = text.replace(/^"|"$/g, "");
+                    document.getElementById('message').textContent = `Updated at ${text}`;
+                })
+                .catch(err => {
+                    document.getElementById('message').textContent = "Error fetching data";
+                    console.error(err);
+                });
+        }
+
+        // initial load
+        updateStatus();
+
+        // refresh button click
+        refreshBtn.addEventListener('click', updateStatus);
+    </script>
+
+    <script>
+        fetch('api/status')  // replace with your endpoint URL
+            .then(response => response.text())  // get as plain text
+            .then(text => {
+                text = text.replace(/^"|"$/g, "");
+                document.getElementById('message').textContent = `Updated at ${text}`;
+            })
+            .catch(err => {
+                document.getElementById('message').textContent = "Error fetching data";
+                console.error(err);
+            });
+    </script>
+
+    <table id="table"></table>
+
+    <script>
+        fetch("/api/data")
+            .then(r => r.json())
+            .then(data => {
+                const table = document.getElementById("table");
+                const headers = Object.keys(data[0]);
+
+                table.innerHTML =
+                    "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>" +
+                    data.map(row =>
+                        "<tr>" + headers.map(h => `<td>${row[h]}</td>`).join("") + "</tr>"
+                    ).join("");
+            });
+    </script>
+</body>
+
+</html>

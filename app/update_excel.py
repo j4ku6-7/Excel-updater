@@ -1,9 +1,22 @@
-def update():
-    import requests
-    import pandas as pd
-    from datetime import datetime 
+import requests
+import pandas as pd
+from datetime import datetime 
+    def update():
+    
 
     URL = "https://ics.upjs.sk/~krajci/skola/alejova/septima/body.xlsx"
+
+
+
+
+   
+    try:
+        last_update = datetime.strptime(
+            status_path.read_text().strip(),
+            "%Y-%m-%d %H:%M:%S"
+        )
+            if datetime.now() - last_update < timedelta(hours=1):
+                return
 
     r = requests.get(URL, timeout=30)
     r.raise_for_status()
